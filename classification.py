@@ -2,17 +2,18 @@ import torch
 import models
 from utils import *
 
+# TODO: make class
+
 
 def main():
     seed = 1234
-    num_epochs = 10
+    num_epochs = 100
     learning_rate = 0.0003
     weight_decay = 0
     batch_size = 100
-    dataset = 'FashionMNIST'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
-    name = 'test'
-
-    net = models.LinearModel(784, 10)
+    dataset = 'CIFAR10'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
+    name = 'MobileNetV2_001'
+    net = models.MobileNetV2(10)
     print(net)
     set_seed(seed)
     device = get_device()
