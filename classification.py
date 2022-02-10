@@ -2,25 +2,17 @@ import torch
 import models
 from utils import *
 
-# TODO: make class
-
 
 def main():
-    seed = 1234
-    num_epochs = 100
+    set_seed(1234)
+
     learning_rate = 0.0003
     weight_decay = 0
     batch_size = 100
-    dataset = 'CIFAR10'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
-    name = 'MobileNetV2_001'
-    net = models.MobileNetV2(10)
-    print(net)
-    set_seed(seed)
-    device = get_device()
-    net = net.to(device)
-    optimizer = torch.optim.Adam(
-        net.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    num_epochs = 2
 
+    dataset = 'MNIST'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
+    name = 'test'
     dataset_root = f'./{dataset}/data'
     model_root = f'./{dataset}/model/{name}'
     result_root = f'./{dataset}/result'
@@ -28,31 +20,31 @@ def main():
 
     train_loader, test_loader = get_dataset(dataset, dataset_root, batch_size)
 
-    net = train(
-        name=name,
-        net=net,
-        device=device,
-        train_loader=train_loader,
-        optimizer=optimizer,
-        model_root=model_root,
-        num_epochs=num_epochs,
-    )
+    net = models.LinearModel(784, 10)
+    device = get_device()
+    optimizer = torch.optim.Adam(
+        net.to(device).parameters(), lr=learning_rate, weight_decay=weight_decay)
 
-    result = evaluate(
+    print(net)
+    print(device)
+    print(optimizer)
+
+    engine = Engine(
         name=name,
         net=net,
         device=device,
+        optimizer=optimizer,
         train_loader=train_loader,
         test_loader=test_loader,
+        num_epochs=num_epochs,
         model_root=model_root,
         result_root=result_root,
+        image_root=image_root,
     )
 
-    plot(
-        result=result,
-        name=name,
-        image_root=image_root
-    )
+    engine.train()
+    engine.evaluate()
+    engine.plot()
 
 
 if __name__ == '__main__':
