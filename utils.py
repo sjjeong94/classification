@@ -61,6 +61,7 @@ class Engine:
         net,
         device,
         optimizer,
+        scheduler,
         train_loader,
         test_loader,
         num_epochs,
@@ -72,6 +73,7 @@ class Engine:
         self.net = net
         self.device = device
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.train_loader = train_loader
         self.test_loader = test_loader
         self.num_epochs = num_epochs
@@ -98,6 +100,7 @@ class Engine:
                 loss.backward()
                 self.optimizer.step()
                 losses.append(loss.item())
+            self.scheduler.step()
             loss_mean = np.mean(losses)
             model_path = os.path.join(
                 self.model_root, '%s_epoch%03d.pth' % (self.name, epoch))

@@ -6,13 +6,13 @@ from utils import *
 def main():
     set_seed(1234)
 
-    learning_rate = 0.0003
-    weight_decay = 0
-    batch_size = 100
-    num_epochs = 100
+    learning_rate = 0.1
+    weight_decay = 0.0005
+    batch_size = 128
+    num_epochs = 200
 
     dataset = 'CIFAR10'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
-    name = 'MobileNetV2_004'
+    name = 'MobileNetV2_005'
     dataset_root = f'./{dataset}/data'
     model_root = f'./{dataset}/model/{name}'
     result_root = f'./{dataset}/result'
@@ -22,8 +22,10 @@ def main():
 
     net = models.MobileNetV2(10)
     device = get_device()
-    optimizer = torch.optim.Adam(
-        net.to(device).parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = torch.optim.SGD(
+        net.to(device).parameters(), lr=learning_rate, momentum=0.9, weight_decay=weight_decay)
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=50, gamma=0.2)
 
     print(net)
     print(device)
@@ -34,6 +36,7 @@ def main():
         net=net,
         device=device,
         optimizer=optimizer,
+        scheduler=scheduler,
         train_loader=train_loader,
         test_loader=test_loader,
         num_epochs=num_epochs,
