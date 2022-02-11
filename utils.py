@@ -34,8 +34,15 @@ def get_dataset(dataset, root, batch_size):
     elif dataset == 'CIFAR100':
         load_dataset = datasets.CIFAR100
 
+    transform = transforms.Compose([
+        transforms.Pad(4, padding_mode='reflect'),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomCrop(32),
+        transforms.ToTensor()
+    ])
+
     train_dataset = load_dataset(
-        root=root, train=True, transform=transforms.ToTensor(), download=True)
+        root=root, train=True, transform=transform, download=True)
     test_dataset = load_dataset(
         root=root, train=False, transform=transforms.ToTensor(), download=False)
 

@@ -9,10 +9,10 @@ def main():
     learning_rate = 0.0003
     weight_decay = 0
     batch_size = 100
-    num_epochs = 2
+    num_epochs = 100
 
-    dataset = 'MNIST'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
-    name = 'test'
+    dataset = 'CIFAR10'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
+    name = 'MobileNetV2_004'
     dataset_root = f'./{dataset}/data'
     model_root = f'./{dataset}/model/{name}'
     result_root = f'./{dataset}/result'
@@ -20,7 +20,7 @@ def main():
 
     train_loader, test_loader = get_dataset(dataset, dataset_root, batch_size)
 
-    net = models.LinearModel(784, 10)
+    net = models.MobileNetV2(10)
     device = get_device()
     optimizer = torch.optim.Adam(
         net.to(device).parameters(), lr=learning_rate, weight_decay=weight_decay)
