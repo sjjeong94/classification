@@ -26,8 +26,12 @@ def MLP(num_in, num_out, num_features, num_layers):
     return nn.Sequential(*layers)
 
 
-def MobileNetV2(num_out):
-    return torchvision.models.mobilenet_v2(num_classes=num_out)
+def MobileNetV2(num_out, pretrained=False):
+    net = torchvision.models.mobilenet_v2(num_classes=num_out)
+    if pretrained:
+        net.features = torchvision.models.mobilenet_v2(
+            pretrained=True).features
+    return net
 
 
 def EfficientNetB0(num_out):

@@ -34,17 +34,24 @@ def get_dataset(dataset, root, batch_size):
     elif dataset == 'CIFAR100':
         load_dataset = datasets.CIFAR100
 
-    transform = transforms.Compose([
+    T_train = transforms.Compose([
         transforms.Pad(4, padding_mode='reflect'),
         transforms.RandomHorizontalFlip(),
         transforms.RandomCrop(32),
-        transforms.ToTensor()
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225])
+    ])
+    T_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225])
     ])
 
     train_dataset = load_dataset(
-        root=root, train=True, transform=transform, download=True)
+        root=root, train=True, transform=T_train, download=True)
     test_dataset = load_dataset(
-        root=root, train=False, transform=transforms.ToTensor(), download=False)
+        root=root, train=False, transform=T_test, download=False)
 
     # Data Loader
     train_loader = torch.utils.data.DataLoader(

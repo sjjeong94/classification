@@ -12,7 +12,7 @@ def main():
     num_epochs = 200
 
     dataset = 'CIFAR10'  # MNIST, FashionMNIST, CIFAR10, CIFAR100
-    name = 'MobileNetV2_005'
+    name = 'EfficientNetB0_001'
     dataset_root = f'./{dataset}/data'
     model_root = f'./{dataset}/model/{name}'
     result_root = f'./{dataset}/result'
@@ -20,7 +20,7 @@ def main():
 
     train_loader, test_loader = get_dataset(dataset, dataset_root, batch_size)
 
-    net = models.MobileNetV2(10)
+    net = models.EfficientNetB0(10)
     device = get_device()
     optimizer = torch.optim.SGD(
         net.to(device).parameters(), lr=learning_rate, momentum=0.9, weight_decay=weight_decay)
