@@ -428,6 +428,10 @@ def train3(epochs, net, train_loader, test_loader, device, criterion, optimizer,
 
         print(log)
 
+    log = '| %12.4f | %12.4f | %12.4f |' % (time_total, acc_train, acc_test)
+    print()
+    print(log)
+
 
 def exp_003():
     set_seed(1234)
@@ -577,5 +581,76 @@ def exp_004():
            device, criterion, optimizer, scheduler)
 
 
+def exp_005():
+    set_seed(1234)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    root = './data'
+    batch_size = 100
+
+    T_train = albumentations.Compose([
+        albumentations.PadIfNeeded(36, 36),
+        albumentations.RandomCrop(32, 32),
+        albumentations.HorizontalFlip(),
+        #albumentations.CoarseDropout(max_holes=1, p=1),
+        albumentations.Normalize((0.4914, 0.4822, 0.4465),
+                                 (0.2023, 0.1994, 0.2010)),
+        albumentations.pytorch.ToTensorV2(),
+
+    ])
+    T_test = albumentations.Compose([
+        albumentations.Normalize((0.4914, 0.4822, 0.4465),
+                                 (0.2023, 0.1994, 0.2010)),
+        albumentations.pytorch.ToTensorV2(),
+    ])
+
+    load_dataset = CIFAR10
+
+    train_dataset = load_dataset(
+        root=root, train=True, transform=T_train, download=True)
+    test_dataset = load_dataset(
+        root=root, train=False, transform=T_test, download=False)
+
+    # Data Loader
+    train_loader = torch.utils.data.DataLoader(
+        dataset=train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
+    test_loader = torch.utils.data.DataLoader(
+        dataset=test_dataset, batch_size=batch_size, shuffle=False, num_workers=1)
+
+    net = nn.Sequential(
+        ConvBNReLU(3, 64, 3, 1, 1),
+        ConvBNReLU(64, 128, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(128, 128, 3, 1, 1),
+        ConvBNReLU(128, 256, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ConvBNReLU(256, 512, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(512, 512, 3, 1, 1),
+        nn.AdaptiveAvgPool2d((1, 1)),
+        nn.Flatten(),
+        nn.Linear(512, 10)
+    )
+    net = net.to(device)
+
+    epochs = 24
+    learning_rate = 0.1
+    momentum = 0.9
+    weight_decay = 5e-4
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(net.parameters(
+    ), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer,
+                                                    max_lr=learning_rate,
+                                                    epochs=epochs,
+                                                    steps_per_epoch=len(
+                                                        train_loader),
+                                                    anneal_strategy='linear')
+
+    train3(epochs, net, train_loader, test_loader,
+           device, criterion, optimizer, scheduler)
+
+
 if __name__ == '__main__':
-    exp_004()
+    exp_005()
