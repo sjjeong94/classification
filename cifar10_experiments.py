@@ -652,13 +652,13 @@ def exp_005():
            device, criterion, optimizer, scheduler)
 
 
-def exp_006():
+def exp_006(num_epochs=24, bs=100, decay=5e-4):
     set_seed(1234)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     root = './data'
-    batch_size = 100
+    batch_size = bs
 
     T_train = albumentations.Compose([
         albumentations.PadIfNeeded(36, 36),
@@ -705,10 +705,10 @@ def exp_006():
     )
     net = net.to(device)
 
-    epochs = 24
+    epochs = num_epochs
     learning_rate = 0.1
     momentum = 0.9
-    weight_decay = 5e-4
+    weight_decay = decay
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(
     ), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
@@ -724,4 +724,4 @@ def exp_006():
 
 
 if __name__ == '__main__':
-    exp_006()
+    exp_006(200, 500, 5e-3)
