@@ -3,7 +3,7 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 
 ---
 
-## CIFAR10 Experiment
+## CIFAR10 Experiments
 ### Eliminating Bottlenecks
 | Case  | Description       | Duration (s) | Train Acc. | Test Acc. |
 | ----- | ----------------- | ------------ | ---------- | --------- |
@@ -41,3 +41,10 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | Case      | Description | Duration (s) | Train Acc. | Test Acc. |
 | --------- | ----------- | ------------ | ---------- | --------- |
 | 006-0-0-2 |             | 846.2451     | 0.9998     | 0.9451    |
+
+
+## CIFAR100 Experiments
+
+| Case | Description | Duration (s) | Train Acc. | Test Acc. |
+| ---- | ----------- | ------------ | ---------- | --------- |
+| 006  |             | 205.4771     | 0.9791     | 0.7428    |
