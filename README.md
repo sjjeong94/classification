@@ -15,6 +15,7 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | 005   | num_workers = 1     | 210.5783     | 0.9906     | 0.9301    |
 | 006   | pin_memory = True   | 201.7149     | 0.9906     | 0.9301    |
 | 008   | non_blocking = True | 194.6007     | 0.9906     | 0.9301    |
+| 009   | set_to_none = True  | 190.4418     | 0.9906     | 0.9301    |
 
 
 ### Batch Size & Weight Decay (Epochs=24)
