@@ -1073,4 +1073,4 @@ def exp_009(num_epochs=24, bs=100, decay=5e-4):
 
 
 if __name__ == '__main__':
-    exp_009()
+    exp_009(bs=128)
