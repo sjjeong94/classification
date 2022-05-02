@@ -5,15 +5,16 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 
 ## CIFAR10 Experiments
 ### Eliminating Bottlenecks
-| Case  | Description       | Duration (s) | Train Acc. | Test Acc. |
-| ----- | ----------------- | ------------ | ---------- | --------- |
-| 001   | baseline          | 761.4502     | 0.9822     | 0.9331    |
-| 002   | amp               | 648.1500     | 0.9825     | 0.9300    |
-| 003   | remove .items()   | 604.4669     | 0.9825     | 0.9300    |
-| 004   | Albumentations    | 330.7161     | 0.9907     | 0.9331    |
-| 004-1 | Windows -> Linux  | 287.2552     | 0.9904     | 0.9289    |
-| 005   | num_workers = 1   | 210.5783     | 0.9906     | 0.9301    |
-| 006   | pin_memory = True | 201.7149     | 0.9906     | 0.9301    |
+| Case  | Description         | Duration (s) | Train Acc. | Test Acc. |
+| ----- | ------------------- | ------------ | ---------- | --------- |
+| 001   | baseline            | 761.4502     | 0.9822     | 0.9331    |
+| 002   | amp                 | 648.1500     | 0.9825     | 0.9300    |
+| 003   | remove .items()     | 604.4669     | 0.9825     | 0.9300    |
+| 004   | Albumentations      | 330.7161     | 0.9907     | 0.9331    |
+| 004-1 | Windows -> Linux    | 287.2552     | 0.9904     | 0.9289    |
+| 005   | num_workers = 1     | 210.5783     | 0.9906     | 0.9301    |
+| 006   | pin_memory = True   | 201.7149     | 0.9906     | 0.9301    |
+| 008   | non_blocking = True | 194.6007     | 0.9906     | 0.9301    |
 
 
 ### Batch Size & Weight Decay (Epochs=24)
@@ -51,3 +52,7 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | 006       |             | 205.4771     | 0.9791     | 0.7428    |
 | 006-0-0-2 |             | 833.5847     | 0.9994     | 0.7608    |
 | 007       |             | 835.2124     | 0.9983     | 0.7627    |
+
+---
+## TODO
+- AutoAugment
