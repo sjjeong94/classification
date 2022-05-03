@@ -1072,5 +1072,80 @@ def exp_009(num_epochs=24, bs=100, decay=5e-4):
            device, criterion, optimizer, scheduler)
 
 
+def exp_010(num_epochs=100, bs=128, decay=5e-4):
+    set_seed(1234)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    root = './data'
+    batch_size = bs
+
+    T_train = albumentations.Compose([
+        albumentations.PadIfNeeded(36, 36),
+        albumentations.RandomCrop(32, 32),
+        albumentations.HorizontalFlip(),
+        albumentations.CoarseDropout(max_holes=1, p=0.5),
+        albumentations.Normalize((0.4914, 0.4822, 0.4465),
+                                 (0.2023, 0.1994, 0.2010)),
+        albumentations.pytorch.ToTensorV2(),
+
+    ])
+    T_test = albumentations.Compose([
+        albumentations.Normalize((0.4914, 0.4822, 0.4465),
+                                 (0.2023, 0.1994, 0.2010)),
+        albumentations.pytorch.ToTensorV2(),
+    ])
+
+    load_dataset = CIFAR10
+
+    train_dataset = load_dataset(
+        root=root, train=True, transform=T_train, download=True)
+    test_dataset = load_dataset(
+        root=root, train=False, transform=T_test, download=False)
+
+    # Data Loader
+    train_loader = torch.utils.data.DataLoader(
+        dataset=train_dataset, batch_size=batch_size, shuffle=True, num_workers=1, pin_memory=True)
+    test_loader = torch.utils.data.DataLoader(
+        dataset=test_dataset, batch_size=batch_size, shuffle=False, num_workers=1, pin_memory=True)
+
+    net = nn.Sequential(
+        ConvBNReLU(3, 64, 3, 1, 1),
+        ResBlock(64, 64, 3, 1, 1),
+        ConvBNReLU(64, 128, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(128, 128, 3, 1, 1),
+        ConvBNReLU(128, 256, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(256, 256, 3, 1, 1),
+        ConvBNReLU(256, 512, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(512, 512, 3, 1, 1),
+        ConvBNReLU(512, 1024, 3, 1, 1),
+        nn.AdaptiveAvgPool2d((1, 1)),
+        nn.Flatten(),
+        nn.Linear(1024, 10)
+    )
+    print(net)
+    net = net.to(device)
+
+    epochs = num_epochs
+    learning_rate = 0.1
+    momentum = 0.9
+    weight_decay = decay
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(net.parameters(
+    ), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer,
+                                                    max_lr=learning_rate,
+                                                    epochs=epochs,
+                                                    steps_per_epoch=len(
+                                                        train_loader),
+                                                    anneal_strategy='linear')
+
+    train9(epochs, net, train_loader, test_loader,
+           device, criterion, optimizer, scheduler)
+
+
 if __name__ == '__main__':
-    exp_009(bs=128)
+    exp_010()

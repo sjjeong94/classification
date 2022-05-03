@@ -45,6 +45,7 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | --------- | ----------- | ------------ | ---------- | --------- |
 | 006-0-0-2 |             | 846.2451     | 0.9998     | 0.9451    |
 | 007       | cutout      | 834.1722     | 0.9981     | 0.9470    |
+| 010       | add layers  | 1216.7310    | 0.9989     | 0.9504    |
 
 
 ## CIFAR100 Experiments
