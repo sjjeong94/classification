@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 import os
 import time
 import random
@@ -92,54 +93,54 @@ def Classifier(num_classes):
 
 
 class Trainer:
-    def __init__(
-        self,
-        root='./data',
-        dataset='CIFAR10',
-        seed=1234,
-        epochs=24,
-        batch_size=128,
-        learning_rate=0.1,
-        momentum=0.9,
-        weight_decay=5e-4,
-        random_crop=True,
-        random_flip=True,
-        cutout=True,
-        amp_enabled=True
-    ):
-        set_seed(seed)
-        self.epochs = epochs
+    root = './data'
+    dataset = 'CIFAR10'
+    seed = 1234
+    epochs = 24
+    batch_size = 128
+    learning_rate = 0.1
+    momentum = 0.9
+    weight_decay = 5e-4
+    random_crop = True
+    random_flip = True
+    cutout = True
+    amp_enabled = True
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        set_seed(self.seed)
 
         self.device = torch.device(
             'cuda' if torch.cuda.is_available() else 'cpu')
         if self.device == 'cpu':
-            amp_enabled = False
-        self.amp_enabled = amp_enabled
+            self.amp_enabled = False
 
-        if dataset == 'CIFAR10':
+        if self.dataset == 'CIFAR10':
             num_classes = 10
             load_dataset = CIFAR10
         else:
             num_classes = 100
             load_dataset = CIFAR100
 
-        T_train = get_transform(random_crop, random_flip, cutout)
+        T_train = get_transform(
+            self.random_crop, self.random_flip, self.cutout)
         T_test = get_transform()
 
         train_dataset = load_dataset(
-            root=root, train=True, transform=T_train, download=True)
+            root=self.root, train=True, transform=T_train, download=True)
         test_dataset = load_dataset(
-            root=root, train=False, transform=T_test, download=False)
+            root=self.root, train=False, transform=T_test, download=False)
 
         self.train_loader = torch.utils.data.DataLoader(
             dataset=train_dataset,
-            batch_size=batch_size,
+            batch_size=self.batch_size,
             shuffle=True,
             num_workers=1,
             pin_memory=True)
         self.test_loader = torch.utils.data.DataLoader(
             dataset=test_dataset,
-            batch_size=batch_size,
+            batch_size=self.batch_size,
             shuffle=False,
             num_workers=1,
             pin_memory=True)
@@ -149,12 +150,12 @@ class Trainer:
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(
             self.net.parameters(),
-            lr=learning_rate,
-            momentum=momentum, weight_decay=weight_decay)
+            lr=self.learning_rate,
+            momentum=self.momentum, weight_decay=self.weight_decay)
         self.scheduler = torch.optim.lr_scheduler.OneCycleLR(
             self.optimizer,
-            max_lr=learning_rate,
-            epochs=epochs,
+            max_lr=self.learning_rate,
+            epochs=self.epochs,
             steps_per_epoch=len(self.train_loader),
             anneal_strategy='linear')
 
@@ -236,6 +237,21 @@ class Trainer:
         print(log)
 
 
+def get_args():
+    parser = ArgumentParser()
+    parser.add_argument('--root', type=str, default='./data')
+    parser.add_argument('--dataset', type=str, default='CIFAR10')
+    parser.add_argument('--seed', type=int, default=1234)
+    parser.add_argument('--epochs', type=int, default=24)
+    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--learning_rate', type=float, default=0.1)
+    parser.add_argument('--momentum', type=float, default=0.9)
+    parser.add_argument('--weight_decay', type=float, default=5e-4)
+    args = parser.parse_args()
+    return args
+
+
 if __name__ == '__main__':
-    t = Trainer()
+    args = get_args()
+    t = Trainer(**vars(args))
     t.train()

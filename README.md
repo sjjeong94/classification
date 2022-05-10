@@ -1,5 +1,5 @@
 # Classification
-This is a PyTorch implementation of classification on CIFAR10/CIFAR100 dataset
+This is a PyTorch implementation of classification on [CIFAR dataset](https://www.cs.toronto.edu/~kriz/cifar.html)
 
 <br>
 
