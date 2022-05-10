@@ -1,7 +1,7 @@
 # Classification
-This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dataset
+This is a PyTorch implementation of classification on CIFAR10/CIFAR100 dataset
 
----
+<br>
 
 ## CIFAR10 Experiments
 ### Eliminating Bottlenecks
@@ -47,6 +47,7 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | 007       | cutout      | 834.1722     | 0.9981     | 0.9470    |
 | 010       | add layers  | 1216.7310    | 0.9989     | 0.9504    |
 
+<br>
 
 ## CIFAR100 Experiments
 
@@ -55,7 +56,9 @@ This is a PyTorch implementation of classification on MNIST/CIFAR10/CIFAR100 dat
 | 006       |             | 205.4771     | 0.9791     | 0.7428    |
 | 006-0-0-2 |             | 833.5847     | 0.9994     | 0.7608    |
 | 007       |             | 835.2124     | 0.9983     | 0.7627    |
+| 010       |             | 1230.7502    | 0.9989     | 0.7713    |
 
----
+<br>
+
 ## TODO
 - AutoAugment
