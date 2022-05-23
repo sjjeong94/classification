@@ -55,7 +55,7 @@ def get_transform(random_crop=False, random_flip=False, cutout=False):
     return albumentations.Compose(tr)
 
 
-def ConvBNReLU(in_ch, out_ch, k_size, stride=1, padding=0):
+def ConvBNAct(in_ch, out_ch, k_size, stride=1, padding=0):
     return nn.Sequential(
         nn.Conv2d(in_ch, out_ch, k_size, stride, padding, bias=False),
         nn.BatchNorm2d(out_ch),
@@ -67,8 +67,8 @@ class ResBlock(nn.Module):
     def __init__(self, in_ch, out_ch, k_size, stride=1, padding=0):
         super().__init__()
         self.layers = nn.Sequential(
-            ConvBNReLU(in_ch, out_ch, k_size, stride, padding),
-            ConvBNReLU(in_ch, out_ch, k_size, stride, padding),
+            ConvBNAct(in_ch, out_ch, k_size, stride, padding),
+            ConvBNAct(in_ch, out_ch, k_size, stride, padding),
         )
 
     def forward(self, x):
@@ -77,13 +77,13 @@ class ResBlock(nn.Module):
 
 def Classifier(num_classes):
     return nn.Sequential(
-        ConvBNReLU(3, 64, 3, 1, 1),
-        ConvBNReLU(64, 128, 3, 1, 1),
+        ConvBNAct(3, 64, 3, 1, 1),
+        ConvBNAct(64, 128, 3, 1, 1),
         nn.MaxPool2d(2, 2),
         ResBlock(128, 128, 3, 1, 1),
-        ConvBNReLU(128, 256, 3, 1, 1),
+        ConvBNAct(128, 256, 3, 1, 1),
         nn.MaxPool2d(2, 2),
-        ConvBNReLU(256, 512, 3, 1, 1),
+        ConvBNAct(256, 512, 3, 1, 1),
         nn.MaxPool2d(2, 2),
         ResBlock(512, 512, 3, 1, 1),
         nn.AdaptiveAvgPool2d((1, 1)),
@@ -219,7 +219,7 @@ class Trainer:
 
                     correct = torch.sum(torch.argmax(out, axis=1) == y)
                     corrects += correct.detach()
-            loss_test = losses / len(train_loader)
+            loss_test = losses / len(test_loader)
             acc_test = corrects / len(test_loader.dataset)
             t1 = time.time()
             time_test = t1 - t0

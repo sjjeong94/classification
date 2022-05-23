@@ -39,8 +39,6 @@ This is a PyTorch implementation of classification on [CIFAR dataset](https://ww
 | 006-2-3-3 | Epochs=200  | 1394.9256    | 0.9991     | 0.9394    |
 
 ### Benchmark 
-- bs=100, decay=5e-4, Epochs=100
-
 | Case      | Description | Duration (s) | Train Acc. | Test Acc. |
 | --------- | ----------- | ------------ | ---------- | --------- |
 | 006-0-0-2 |             | 846.2451     | 0.9998     | 0.9451    |
@@ -50,7 +48,6 @@ This is a PyTorch implementation of classification on [CIFAR dataset](https://ww
 <br>
 
 ## CIFAR100 Experiments
-
 | Case      | Description | Duration (s) | Train Acc. | Test Acc. |
 | --------- | ----------- | ------------ | ---------- | --------- |
 | 006       |             | 205.4771     | 0.9791     | 0.7428    |
