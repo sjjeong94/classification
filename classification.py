@@ -231,10 +231,11 @@ class Trainer:
 
             print(log)
 
-        log = '| %12.4f | %12.4f | %12.4f |' % (
-            time_total, acc_train, acc_test)
         print()
-        print(log)
+        print('| %12s | %12s | %12s | %12s | %12s |' %
+              ('Epochs', 'Batch Size', 'Time (s)', 'Train Acc.', 'Test Acc.'))
+        print('| %12d | %12d | %12.2f | %12.2f | %12.2f |' %
+              (epochs, self.batch_size, time_total, acc_train * 100, acc_test * 100))
 
 
 def get_args():
