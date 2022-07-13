@@ -3,10 +3,10 @@ This is a PyTorch implementation of classification on [CIFAR dataset](https://ww
 
 | Dataset  | Epochs | Batch Size | Time (s) | Train Acc. | Test Acc. |
 | -------- | ------ | ---------- | -------- | ---------- | --------- |
-| CIFAR10  | 24     | 128        | 178.39   | 97.47      | 93.23     |
-| CIFAR10  | 100    | 128        | 739.43   | 99.72      | 94.61     |
-| CIFAR100 | 24     | 128        | 178.03   | 95.16      | 73.73     |
-| CIFAR100 | 100    | 128        | 739.23   | 99.78      | 76.53     |
+| CIFAR10  | 24     | 128        | 179.09   | 99.09      | 93.21     |
+| CIFAR10  | 100    | 128        | 740.42   | 99.98      | 94.39     |
+| CIFAR100 | 24     | 128        | 178.40   | 98.33      | 73.85     |
+| CIFAR100 | 100    | 128        | 742.26   | 99.95      | 75.87     |
 
 ## Training
 

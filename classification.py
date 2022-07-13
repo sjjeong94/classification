@@ -5,9 +5,9 @@ import random
 import numpy as np
 import torch
 import torch.nn as nn
-from torchvision import datasets
-import albumentations
-import albumentations.pytorch
+
+import datasets
+import transforms
 
 
 def set_seed(seed):
@@ -20,39 +20,17 @@ def set_seed(seed):
         torch.backends.cudnn.deterministic = True
 
 
-class CIFAR10(datasets.CIFAR10):
-    def __getitem__(self, index):
-        img, target = self.data[index], self.targets[index]
-
-        if self.transform is not None:
-            img = self.transform(image=img)['image']
-
-        return img, target
-
-
-class CIFAR100(datasets.CIFAR100):
-    def __getitem__(self, index):
-        img, target = self.data[index], self.targets[index]
-
-        if self.transform is not None:
-            img = self.transform(image=img)['image']
-
-        return img, target
-
-
 def get_transform(random_crop=False, random_flip=False, cutout=False):
     tr = []
     if random_crop:
-        tr.append(albumentations.PadIfNeeded(36, 36))
-        tr.append(albumentations.RandomCrop(32, 32))
+        tr.append(transforms.Pad(2))
+        tr.append(transforms.RandomCrop(32))
     if random_flip:
-        tr.append(albumentations.HorizontalFlip())
-    if cutout:
-        tr.append(albumentations.CoarseDropout(max_holes=1, p=1))
+        tr.append(transforms.RandomHorizontalFlip())
     m, s = (0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)
-    tr.append(albumentations.Normalize(m, s))
-    tr.append(albumentations.pytorch.ToTensorV2())
-    return albumentations.Compose(tr)
+    tr.append(transforms.ToTensor())
+    tr.append(transforms.Normalize(m, s))
+    return transforms.Compose(tr)
 
 
 def ConvBNAct(in_ch, out_ch, k_size, stride=1, padding=0):
@@ -118,10 +96,10 @@ class Trainer:
 
         if self.dataset == 'CIFAR10':
             num_classes = 10
-            load_dataset = CIFAR10
+            load_dataset = datasets.CIFAR10
         else:
             num_classes = 100
-            load_dataset = CIFAR100
+            load_dataset = datasets.CIFAR100
 
         T_train = get_transform(
             self.random_crop, self.random_flip, self.cutout)
@@ -136,13 +114,13 @@ class Trainer:
             dataset=train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=1,
+            num_workers=2,
             pin_memory=True)
         self.test_loader = torch.utils.data.DataLoader(
             dataset=test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=1,
+            num_workers=2,
             pin_memory=True)
 
         self.net = Classifier(num_classes).to(self.device)
