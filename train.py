@@ -38,7 +38,7 @@ class Trainer:
     root = './data'
     dataset = 'CIFAR10'
     seed = 1234
-    epochs = 24
+    epochs = 25
     batch_size = 128
     learning_rate = 0.1
     momentum = 0.9
@@ -47,6 +47,7 @@ class Trainer:
     random_flip = True
     cutout = True
     amp_enabled = True
+    num_workers = 2
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -78,13 +79,13 @@ class Trainer:
             dataset=train_dataset,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=2,
+            num_workers=self.num_workers,
             pin_memory=True)
         self.test_loader = torch.utils.data.DataLoader(
             dataset=test_dataset,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=2,
+            num_workers=self.num_workers,
             pin_memory=True)
 
         self.net = models.Classifier(num_classes).to(
@@ -186,7 +187,7 @@ def get_args():
     parser.add_argument('--root', type=str, default='./data')
     parser.add_argument('--dataset', type=str, default='CIFAR10')
     parser.add_argument('--seed', type=int, default=1234)
-    parser.add_argument('--epochs', type=int, default=24)
+    parser.add_argument('--epochs', type=int, default=25)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--learning_rate', type=float, default=0.1)
     parser.add_argument('--momentum', type=float, default=0.9)

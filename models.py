@@ -36,3 +36,18 @@ def Classifier(num_classes):
         nn.Flatten(),
         nn.Linear(512, num_classes)
     )
+
+
+def Classifier2(num_classes):
+    return nn.Sequential(
+        ConvBNAct(3, 64, 3, 1, 1),
+        ConvBNAct(64, 128, 5, 2, 2),
+        ResBlock(128, 128, 3, 1, 1),
+        ConvBNAct(128, 256, 3, 1, 1),
+        nn.MaxPool2d(2, 2),
+        ResBlock(256, 256, 3, 1, 1),
+        ConvBNAct(256, 128, 3, 1, 1),
+        nn.AdaptiveMaxPool2d((1, 1)),
+        nn.Flatten(),
+        nn.Linear(128, num_classes),
+    )
